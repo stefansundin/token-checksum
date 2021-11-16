@@ -3,6 +3,8 @@ require "rack"
 require "active_support"
 require "zlib"
 
+CHECKSUM_SALT = "AemVTMy0L8NkbebfUMeK92OvVHUomf8IP2Dw6z2Y"
+
 class Base62
   PRIMITIVES = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"] +\
   ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"] +\
@@ -32,7 +34,7 @@ module SecurityUtils
 end
 
 def checksum(token)
-  crc_value = Zlib.crc32(token)
+  crc_value = Zlib.crc32(CHECKSUM_SALT + token)
   Base62.encode(crc_value, min_length: 6)
 end
 
